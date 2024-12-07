@@ -2,9 +2,10 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.5'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.openapi.generator' version '7.10.0'
 }
 
-group = 'com.lilacode'
+group = 'com.lilacode.lilashop'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -18,12 +19,55 @@ repositories {
 }
 
 dependencies {
+	// Spring Boot Reactive Web
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// Validation
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
+
+	// OpenAPI
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0' // Swagger UI
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+
+	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "${buildDir}/generated/src/main/java"
+		}
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "${projectDir}/src/main/resources/openapi.yaml"
+	outputDir = "${buildDir}/generated"
+	apiPackage = "com.lilashop.api"
+	modelPackage = "com.lilashop.model"
+	configOptions = [
+			interfaceOnly: 'true',
+			useSpringBoot3: 'true',
+			reactive: 'true',
+			useJakartaEe: 'true'
+	]
+}
+
+tasks.compileJava {
+	dependsOn tasks.openApiGenerate
+}
+
+tasks.bootJar {
+	archiveFileName = "lilashop-backend.jar" // Name of the JAR file
+	destinationDirectory = file("$buildDir/libs") // Output directory
 }
