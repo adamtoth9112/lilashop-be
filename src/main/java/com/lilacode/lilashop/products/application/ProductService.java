@@ -2,24 +2,40 @@ package com.lilacode.lilashop.products.application;
 
 import com.lilacode.lilashop.products.domain.model.Product;
 import com.lilacode.lilashop.products.infrastructure.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public Mono<Product> save(Product product) {
 
         return productRepository.save(product);
     }
 
-    public Flux<Product> findAll() {
+    public Flux<Product> getAllProducts() {
 
         return productRepository.findAll();
+    }
+
+    public Flux<Product> getAllProducts(Sort sort) {
+
+        return productRepository.findAll(sort);
+    }
+
+    public Mono<Product> getProductById(long productId) {
+
+        return productRepository.findById(productId);
+    }
+
+    public Mono<Void> deleteById(long productId) {
+
+        return productRepository.deleteById(productId);
     }
 }

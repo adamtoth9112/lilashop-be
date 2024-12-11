@@ -27,6 +27,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
+	// Mapstruct
+	implementation 'org.mapstruct:mapstruct:1.6.0.Beta1'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0.Beta1'
+
 	// Persistence
 	runtimeOnly 'io.r2dbc:r2dbc-h2'
 	runtimeOnly 'com.h2database:h2'
@@ -65,18 +69,20 @@ openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "${projectDir}/src/main/resources/openapi.yaml"
 	outputDir = "${buildDir}/generated"
-	apiPackage = "com.lilashop.api"
-	modelPackage = "com.lilashop.api.model"
+	apiPackage = "com.lilacode.lilashop.api"
+	modelPackage = "com.lilacode.lilashop.api.model"
 	configOptions = [
 			interfaceOnly: 'true',
 			useSpringBoot3: 'true',
 			reactive: 'true',
-			useJakartaEe: 'true'
+			useJakartaEe: 'true',
+			useResponseEntity: 'false'
 	]
 }
 
 tasks.compileJava {
 	dependsOn tasks.openApiGenerate
+	options.compilerArgs += ['-Amapstruct.defaultComponentModel=spring']
 }
 
 tasks.bootJar {

@@ -27,6 +27,11 @@ paths:
       responses:
         '201':
           description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
   /products/{id}:
     get:
       summary: Get product by ID
@@ -88,7 +93,3 @@ components:
         price:
           type: number
           format: float
-        description:
-          type: string
-        inStock:
-          type: boolean
