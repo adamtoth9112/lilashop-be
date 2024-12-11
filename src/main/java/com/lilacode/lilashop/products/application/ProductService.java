@@ -1,5 +1,6 @@
 package com.lilacode.lilashop.products.application;
 
+import com.lilacode.lilashop.products.common.exception.ResourceNotFoundException;
 import com.lilacode.lilashop.products.domain.model.Product;
 import com.lilacode.lilashop.products.infrastructure.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +32,18 @@ public class ProductService {
 
     public Mono<Product> getProductById(long productId) {
 
-        return productRepository.findById(productId);
+        return productRepository.findById(productId)
+                .switchIfEmpty(getError(productId));
     }
 
     public Mono<Void> deleteById(long productId) {
 
-        return productRepository.deleteById(productId);
+        return productRepository.deleteById(productId)
+                .switchIfEmpty(getError(productId));
+    }
+
+    private <T> Mono<T> getError(long productId) {
+        return Mono.error(
+                new ResourceNotFoundException(String.format(" Product with id '%s'", productId)));
     }
 }
