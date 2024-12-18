@@ -1,6 +1,7 @@
 package com.lilacode.lilashop.products;
 
 import com.lilacode.lilashop.api.ProductsApi;
+import com.lilacode.lilashop.api.model.NewProduct;
 import com.lilacode.lilashop.api.model.Product;
 import com.lilacode.lilashop.products.application.ProductService;
 import com.lilacode.lilashop.products.infrastructure.mapper.ProductMapper;
@@ -39,13 +40,13 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
-    public Mono<Void> productsIdPut(String id, Mono<Product> product, ServerWebExchange exchange) {
+    public Mono<Void> productsIdPut(String id, Mono<NewProduct> product, ServerWebExchange exchange) {
 
         return ProductsApi.super.productsIdPut(id, product, exchange);
     }
 
     @Override
-    public Mono<Product> productsPost(Mono<Product> product, ServerWebExchange exchange) {
+    public Mono<Product> productsPost(Mono<NewProduct> product, ServerWebExchange exchange) {
 
         return product.map(productMapper::toEntity)
                 .flatMap(productService::save)

@@ -1,15 +1,19 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://db:5432/productdb
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: password
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+  r2dbc:
+    url: ${SPRING_DATASOURCE_URL:r2dbc:postgresql://localhost:5432/lilashop_db}
+    username: ${SPRING_DATASOURCE_USERNAME:lilashop_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:lilashop_password}
+  data:
+    r2dbc:
+      dialect: postgre
+      repositories:
+        enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 logging:
   level:

@@ -23,7 +23,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/NewProduct'
       responses:
         '201':
           description: Product created
@@ -63,7 +63,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/NewProduct'
       responses:
         '200':
           description: Product updated
@@ -83,13 +83,18 @@ paths:
 
 components:
   schemas:
-    Product:
+    NewProduct:
       type: object
       properties:
-        id:
-          type: string
         name:
           type: string
         price:
           type: number
           format: float
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/NewProduct'
+        - type: object
+          properties:
+            id:
+              type: string

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: lilashop_postgres
+    environment:
+      POSTGRES_USER: lilashop_user
+      POSTGRES_PASSWORD: lilashop_password
+      POSTGRES_DB: lilashop_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lilashop_backend
+    environment:
+      SPRING_DATASOURCE_URL: r2dbc:postgresql://postgres:5432/lilashop_db
+      SPRING_DATASOURCE_USERNAME: lilashop_user
+      SPRING_DATASOURCE_PASSWORD: lilashop_password
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
