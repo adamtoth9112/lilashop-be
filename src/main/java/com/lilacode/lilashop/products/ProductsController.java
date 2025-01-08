@@ -1,6 +1,6 @@
 package com.lilacode.lilashop.products;
 
-import com.lilacode.lilashop.api.ProductsApi;
+import com.lilacode.lilashop.api.ApiApi;
 import com.lilacode.lilashop.api.model.NewProduct;
 import com.lilacode.lilashop.api.model.Product;
 import com.lilacode.lilashop.products.application.ProductService;
@@ -13,40 +13,40 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-public class ProductsController implements ProductsApi {
+public class ProductsController implements ApiApi {
 
     private final ProductService productService;
     private final ProductMapper productMapper;
 
 
     @Override
-    public Flux<Product> productsGet(ServerWebExchange exchange) {
+    public Flux<Product> getProducts(ServerWebExchange exchange) {
 
         return productService.getAllProducts()
                 .map(productMapper::toDto);
     }
 
     @Override
-    public Mono<Void> productsIdDelete(String id, ServerWebExchange exchange) {
+    public Mono<Void> deleteProduct(String id, ServerWebExchange exchange) {
 
         return productService.deleteById(Long.parseLong(id));
     }
 
     @Override
-    public Mono<Product> productsIdGet(String id, ServerWebExchange exchange) {
+    public Mono<Product> getProductById(String id, ServerWebExchange exchange) {
 
         return productService.getProductById(Long.parseLong(id))
                 .map(productMapper::toDto);
     }
 
     @Override
-    public Mono<Void> productsIdPut(String id, Mono<NewProduct> product, ServerWebExchange exchange) {
+    public Mono<Void> updateProduct(String id, Mono<NewProduct> product, ServerWebExchange exchange) {
 
-        return ProductsApi.super.productsIdPut(id, product, exchange);
+        return ApiApi.super.updateProduct(id, product, exchange);
     }
 
     @Override
-    public Mono<Product> productsPost(Mono<NewProduct> product, ServerWebExchange exchange) {
+    public Mono<Product> createProduct(Mono<NewProduct> product, ServerWebExchange exchange) {
 
         return product.map(productMapper::toEntity)
                 .flatMap(productService::save)

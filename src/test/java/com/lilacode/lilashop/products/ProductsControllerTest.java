@@ -40,7 +40,7 @@ class ProductControllerTest {
         given(productMapper.toDto(sampleProduct)).willReturn(productDto);
 
         webTestClient.get()
-                .uri("/products")
+                .uri("/api/products")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType("application/json")

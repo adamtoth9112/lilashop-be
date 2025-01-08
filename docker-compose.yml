@@ -11,6 +11,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
 
   backend:
     build:
@@ -23,8 +25,35 @@ services:
       SPRING_DATASOURCE_PASSWORD: lilashop_password
     depends_on:
       - postgres
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ../lilashop-fe
+    container_name: lilashop_frontend
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx:alpine
     ports:
-      - "8080:8080"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
+
