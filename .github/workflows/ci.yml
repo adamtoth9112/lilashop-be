@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '23'
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       # Build the backend JAR using Gradle
       - name: Build Backend with Gradle
