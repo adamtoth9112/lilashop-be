@@ -32,6 +32,8 @@ services:
     build:
       context: ../lilashop-fe
     container_name: lilashop_frontend
+    environment:
+      API_PROXY_URL: http://reverse-proxy:80
     depends_on:
       - backend
     networks:
